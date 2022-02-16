@@ -7,7 +7,7 @@ const getFormattedPrice = (price) => `$${price.toFixed(2)}`;
 export default function App() {
   const [total, setTotal] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [selectAll, setSelectAll] = useState(true);
+  const [selectAll, setSelectAll] = useState(false);
 
   const onSelectHandler = (e) => {
     const selectedIndex = selectedOptions.indexOf(e.target.id);
@@ -27,13 +27,29 @@ export default function App() {
 
   const selectAllHandler = (e) => {
     setSelectAll(!selectAll);
+  };
+
+  useEffect(() => {
     if (selectAll) {
       setSelectedOptions(toppings.map((item) => item._id));
     }
     if (!selectAll) {
       setSelectedOptions([]);
     }
-  };
+  }, [selectAll]);
+
+  // useEffect(() => {
+
+  // }, [selectAll]);
+
+  useEffect(() => {
+    if (selectedOptions.length === toppings.length) {
+      setSelectAll(true);
+    }
+    if (selectedOptions.length !== toppings.length) {
+      setSelectAll(false);
+    }
+  }, [selectedOptions, toppings]);
 
   return (
     <div className="App">
@@ -43,6 +59,7 @@ export default function App() {
           type="checkbox"
           name="Select All"
           value={selectAll}
+          checked={selectAll}
           onChange={selectAllHandler}
         />
         <label htmlFor={`custom-checkbox`}>Select All</label>
